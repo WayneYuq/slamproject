@@ -17,38 +17,33 @@
  *
  */
 
-#ifndef CONFIG_H
-#define CONFIG_H
-
-#include "myslam/common_include.h"
+#ifndef MAPPOINT_H
+#define MAPPOINT_H
 
 namespace myslam
 {
-  
-class Config
-{
-private:
-  static std::shared_ptr<Config> config_;
-  cv::FileStorage file_;
-  
-  Config () {} // private constructor makes a singleton
 
-public:
-  ~Config(); // close the file when deconstructing
-  
-  // set a new config file
-  static void setParameterFile( const std::string& filename );
-  
-  // access the parameter values
-  template< typename T >
-  static T get( const std::string& key )
-  {
-    return T( Config::config_->file_[key] );
-  }
+class Frame;
+class MapPoint
+{
+ public:
+  typedef shared_ptr<MapPoint> Ptr;
+  unsigned long id_; // ID
+  Vector3d pos_; // Position in world
+  Vector3d norm_; // Normal of viewing direction
+  Mat descriptor_; // Descriptor for matching
+  int observed_times_; // being observed by feature matching algo.
+  int correct_times_; // being an inliner in pose estimation
+
+  MapPoint();
+  MapPoint( long id, Vector3d position, Vector3d norm );
+
+  // factory function
+  static MapPoint::Ptr createMapPoint();
 };
 
 }
 
 
 
-#endif // CONFIG_H
+#endif // MAPPOINT_H
