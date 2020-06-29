@@ -1,10 +1,54 @@
 [Buildset]
 BuildItems=@Variant(\x00\x00\x00\t\x00\x00\x00\x00\x01\x00\x00\x00\x0b\x00\x00\x00\x00\x01\x00\x00\x00\x16\x00s\x00l\x00a\x00m\x00p\x00r\x00o\x00j\x00e\x00c\x00t)
 
+[CMake]
+Build Directory Count=1
+Current Build Directory Index=0
+ProjectRootRelative=./
+
+[CMake][CMake Build Directory 0]
+Build Directory Path=file:///home/wayne/workspace/SLAM/slamproject/build
+Build Type=Debug
+CMake Binary=file:///usr/local/bin/cmake
+Environment Profile=
+Extra Arguments=
+Install Directory=file:///usr/local
+
+[CustomDefinesAndIncludes][ProjectPath0]
+Defines=\x00\x00\x00\x00
+Includes=\x00\x00\x00\x00
+Path=.
+
+[CustomDefinesAndIncludes][ProjectPath1]
+Defines=\x00\x00\x00\x00
+Includes=\x00\x00\x00\x00
+Path=CMakeLists.txt
+
 [Defines And Includes][Compiler]
 Name=GCC
 Path=gcc
 Type=GCC
+
+[Launch]
+Launch Configurations=Launch Configuration 0
+
+[Launch][Launch Configuration 0]
+Configured Launch Modes=execute
+Configured Launchers=nativeAppLauncher
+Name=New Compiled Binary Launcher
+Type=Native Application
+
+[Launch][Launch Configuration 0][Data]
+Arguments=/home/wayne/workspace/SLAM/slamproject/config/default.yaml
+Dependencies=@Variant(\x00\x00\x00\t\x00\x00\x00\x00\x00)
+Dependency Action=Nothing
+EnvironmentGroup=
+Executable=file:///home/wayne/workspace/SLAM/slamproject/bin/run_vo
+External Terminal=konsole --noclose --workdir %workdir -e %exe
+Project Target=slamproject,test,run_vo
+Use External Terminal=false
+Working Directory=file:///home/wayne/workspace/SLAM/slamproject/
+isExecutable=true
 
 [Project]
 VersionControlSupport=kdevgit
