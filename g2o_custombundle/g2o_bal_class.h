@@ -46,7 +46,7 @@ public:
   
 };
 
-class  EdgeObservationBAL : public g2o:BaseBinaryEdge<2, Eigen::Vector2d,VertexCameraBAL, VertexPointBAL>
+class  EdgeObservationBAL : public g2o::BaseBinaryEdge<2, Eigen::Vector2d,VertexCameraBAL, VertexPointBAL>
 {
 public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
