@@ -62,6 +62,7 @@ public:
         return false;
     }
   
+  // 覆盖基类函数,使用operator()计算代价函数
   virtual void computeError() override   // The virtual function comes from the Edge base class. Must define if you use edge.
     {
         const VertexCameraBAL* cam = static_cast<const VertexCameraBAL*> ( vertex ( 0 ) );
@@ -70,7 +71,8 @@ public:
         ( *this ) ( cam->estimate().data(), point->estimate().data(), _error.data() );
 
     }
-  
+    
+  // 为了使用 Ceres 求导功能而定义的函数,让本类成为拟函数类
   template<typename T>
   bool operator() ( const T* camera, const T* point ,T* residuals ) const
   {
@@ -99,6 +101,7 @@ public:
         double *parameters[] = { const_cast<double*> ( cam->estimate().data() ), const_cast<double*> ( point->estimate().data() ) };
         double *jacobians[] = { dError_dCamera.data(), dError_dPoint.data() };
         double value[Dimension];
+	// Ceres 中的自动求导函数用法,需要提供 operator() 函数成员
         bool diffState = BalAutoDiff::Differentiate ( *this, parameters, Dimension, value, jacobians );
 
         // copy over the Jacobians (convert row-major -> column-major)

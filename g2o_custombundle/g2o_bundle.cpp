@@ -46,7 +46,7 @@ void BuildProblem(const BALProblem* bal_problem, g2o::SparseOptimizer* optimizer
     const int camera_block_size = bal_problem->camera_block_size();
     const int point_block_size = bal_problem->point_block_size();
 
-    // Set camera vertex with initial value in the dataset.
+    // Set camera vertex with initial value in the dataset.添加相机和对应的初始值.
     const double* raw_cameras = bal_problem->cameras();
     for(int i = 0; i < num_cameras; ++i)
     {
@@ -67,10 +67,12 @@ void BuildProblem(const BALProblem* bal_problem, g2o::SparseOptimizer* optimizer
     {
         ConstVectorRef temVecPoint(raw_points + point_block_size * j, point_block_size);
         VertexPointBAL* pPoint = new VertexPointBAL();
-        pPoint->setEstimate(temVecPoint);   // initial value for the point i..
-        pPoint->setId(j + num_cameras);     // each vertex should have an unique id, no matter it is a camera vertex, or a point vertex 
+        pPoint->setEstimate(temVecPoint);   // initial value for the point i..点云的初始值
+        
+	// 为了不和相机冲突,加上相机的 id
+	pPoint->setId(j + num_cameras);     // each vertex should have an unique id, no matter it is a camera vertex, or a point vertex 
 
-        // remeber to add vertex into optimizer..
+        // remeber to add vertex into optimizer.. 设置该点在解方程时进行 Schur 消元。
         pPoint->setMarginalized(true);
         optimizer->addVertex(pPoint);
     }
@@ -85,17 +87,18 @@ void BuildProblem(const BALProblem* bal_problem, g2o::SparseOptimizer* optimizer
 
         const int camera_id = bal_problem->camera_index()[i]; // get id for the camera; 
         const int point_id = bal_problem->point_index()[i] + num_cameras; // get id for the point 
-        
+        // Huber loss 函数(默认为不用设置)
         if(params.robustify)
         {
             g2o::RobustKernelHuber* rk = new g2o::RobustKernelHuber;
             rk->setDelta(1.0);
             bal_edge->setRobustKernel(rk);
         }
-        // set the vertex by the ids for an edge observation
+        // set the vertex by the ids for an edge observation  设置边所对应的两个节点
         bal_edge->setVertex(0,dynamic_cast<VertexCameraBAL*>(optimizer->vertex(camera_id)));
         bal_edge->setVertex(1,dynamic_cast<VertexPointBAL*>(optimizer->vertex(point_id)));
-        bal_edge->setInformation(Eigen::Matrix2d::Identity());
+        bal_edge->setInformation(Eigen::Matrix2d::Identity()); // 设置其协方差矩阵(在此处为单位矩阵)
+        // 设置边所对应的观测值
         bal_edge->setMeasurement(Eigen::Vector2d(observations[2*i+0],observations[2*i + 1]));
 
        optimizer->addEdge(bal_edge) ;
