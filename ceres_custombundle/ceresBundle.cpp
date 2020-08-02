@@ -30,16 +30,16 @@ void SetOrdering(BALProblem* bal_problem, ceres::Solver::Options* options, const
     double* cameras = bal_problem->mutable_cameras();
     
     if (params.ordering == "automatic")
-	return;
+	    return;
     
     ceres::ParameterBlockOrdering* ordering = new ceres::ParameterBlockOrdering;
     
-    // the ponts come before the cameras
+    // the points come before the cameras
     for(int i = 0; i < num_points; ++i)
-	ordering->AddElementToGroup(points + point_block_size*i, 0);
+	    ordering->AddElementToGroup(points + point_block_size*i, 0);
     
     for(int i = 0; i < num_cameras; ++i)
-	ordering->AddElementToGroup(cameras + camera_block_size*i, 1);
+	    ordering->AddElementToGroup(cameras + camera_block_size*i, 1);
     
     options->linear_solver_ordering.reset(ordering);
 	
@@ -83,23 +83,23 @@ void BuildProblem(BALProblem* bal_problem, Problem* problem, const BundleParams&
 
     for (int i = 0; i < bal_problem->num_observations(); ++i)
     {
-	CostFunction* cost_function;
-	
-	// Each Residual block takes a point and a camera as input 
-        // and outputs a 2 dimensional Residual
-	
-	cost_function = SnavelyReprojectionError::Create(observations[2*i+0], observations[2*i+1]);
-	
-	// if enabled use Huber's loss funciton
-	LossFunction* loss_function = params.robustify ? new HuberLoss(1.0) : NULL;
-	
-	// Each observatoin corresponds to a pair of a camera and a point 
-        // which are identified by camera_index()[i] and point_index()[i]
-        // respectively.
-	double* camera = cameras + camera_block_size * bal_problem->camera_index()[i];
-	double* point = points + point_block_size * bal_problem->point_index()[i];
-	
-	problem->AddResidualBlock(cost_function, loss_function, camera, point);
+        CostFunction* cost_function;
+        
+        // Each Residual block takes a point and a camera as input 
+            // and outputs a 2 dimensional Residual
+        
+        cost_function = SnavelyReprojectionError::Create(observations[2*i+0], observations[2*i+1]);
+        
+        // if enabled use Huber's loss funciton
+        LossFunction* loss_function = params.robustify ? new HuberLoss(1.0) : NULL;
+        
+        // Each observatoin corresponds to a pair of a camera and a point 
+            // which are identified by camera_index()[i] and point_index()[i]
+            // respectively.
+        double* camera = cameras + camera_block_size * bal_problem->camera_index()[i];
+        double* point = points + point_block_size * bal_problem->point_index()[i];
+        
+        problem->AddResidualBlock(cost_function, loss_function, camera, point);
 	
     }
     
