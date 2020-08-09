@@ -194,7 +194,7 @@ bool epipolarSearch(
 
     //之前的px_mean_curr为均值深度估计的像素坐标，下面是用最大深度和最小深度估计的像素坐标
     Vector2d px_min_curr = cam2px(T_C_R * (f_ref * d_min)); // 按最小深度投影的像素
-    Vector2d px_max_curr = cam2px(T_C_R * (f_ref * d_max)); // 按最 大 深度投影的像素
+    Vector2d px_max_curr = cam2px(T_C_R * (f_ref * d_max)); // 按最大深度投影的像素
 
     //确定一条向量，作为极线的方向
     Vector2d epipolar_line = px_max_curr - px_min_curr; // 极线(线段形式)
